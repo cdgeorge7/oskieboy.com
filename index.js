@@ -5,33 +5,24 @@ import config from "./config.js";
   const usedBTNKey = "usedButtonNames";
   const button = document.getElementById("anotherButton");
 
-  const image1Id = "firstImage";
-  const image2Id = "secondImage";
-  const image = document.getElementById(image1Id);
-  const image2 = document.getElementById(image2Id);
-  var currentImage = image1Id;
-  var init = true;
+  const imageId = "firstImage";
+  const image = document.getElementById(imageId);
   image.src = getImageSource();
   image.classList.add("fade-in");
-  image2.classList.add("fade-out");
   image.addEventListener("load", imageLoadHandler);
-  image2.addEventListener("load", imageLoadHandler);
 
   button.innerHTML = chooseButtonName();
   button.addEventListener("click", (e) => {
     button.disabled = true;
-    if (currentImage === image1Id) {
-      image.classList.remove("fade-in");
-      image.classList.add("fade-out");
-      currentImage = image2Id;
-      image2.src = getImageSource();
-    } else {
-      image2.classList.remove("fade-in");
-      image2.classList.add("fade-out");
-      currentImage = image1Id;
+    image.classList.remove("fade-in");
+    image.classList.add("fade-out");
+    e.target.innerHTML = chooseButtonName();
+  });
+
+  image.addEventListener("transitionend", (e) => {
+    if (image.classList.contains("fade-out")) {
       image.src = getImageSource();
     }
-    e.target.innerHTML = chooseButtonName();
   });
 
   function randomArrayElement(array) {
@@ -44,17 +35,8 @@ import config from "./config.js";
 
   function imageLoadHandler() {
     button.disabled = false;
-    if (init) {
-      init = false;
-      return;
-    }
-    if (currentImage === image1Id) {
-      image.classList.remove("fade-out");
-      image.classList.add("fade-in");
-    } else {
-      image2.classList.remove("fade-out");
-      image2.classList.add("fade-in");
-    }
+    image.classList.remove("fade-out");
+    image.classList.add("fade-in");
   }
 
   function chooseFileName() {
